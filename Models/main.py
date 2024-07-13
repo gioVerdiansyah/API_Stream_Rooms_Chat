@@ -7,9 +7,13 @@ class ModelMain:
         self.mongo_client = MongoClient(os.getenv("APP_DB_URL"))
         self.db_name = os.getenv("APP_DB_NAME")
         self.room_collection = "rooms"
+        self.user_collection = "users"
 
     def __setup__(self):
         db = self.mongo_client[self.db_name]
 
         if self.room_collection not in db.list_collection_names():
             db.create_collection(self.room_collection)
+
+        if self.user_collection not in db.list_collection_names():
+            db.create_collection(self.user_collection)

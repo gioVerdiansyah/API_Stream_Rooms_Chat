@@ -8,6 +8,13 @@ class RoomsController:
     def __init__(self):
         self.model = RoomsModel()
 
+    def get_room(self):
+        try:
+            data = self.model.get_room()
+            return response(message=data['message'], isSuccess=data['success'], statusCode=data['code'], data=data['data'])
+        except Exception as e:
+            return response(message="There is a server error!", data=str(e), isSuccess=False, statusCode=500)
+
     def add_room(self):
         try:
             json_data = request.get_json()
@@ -16,6 +23,7 @@ class RoomsController:
             payload = {
                 "name": room_name,
                 "inRoom": 0,
+                "talks": [],
                 "created_at": time,
                 "updated_at": time,
             }

@@ -2,6 +2,7 @@ from Core.Flask_Kernel import app
 from Http.Middleware.VerifyAPIToken import require_api_key
 from Http.Controllers.API.LoginController import verify_login
 from Http.Controllers.API.RoomsController import RoomsController
+from Http.Controllers.API.UsersController import UserController
 from werkzeug.exceptions import HTTPException
 from Helpers.HandleResponseHelper import get_struc
 from flask import json
@@ -24,6 +25,11 @@ def __init_api__():
     def login():
         return verify_login()
 
+    @app.route("/api/admin/room/get", methods=["GET"])
+    def get_room():
+        room = RoomsController()
+        return room.get_room()
+
     @app.route("/api/admin/room/add", methods=["POST"])
     def add_room():
         room = RoomsController()
@@ -38,3 +44,13 @@ def __init_api__():
     def delete_room():
         room = RoomsController()
         return room.delete_room()
+
+    @app.route("/api/admin/user/get", methods=["GET"])
+    def get_user():
+        user = UserController()
+        return user.get_users()
+
+    @app.route("/api/user/join", methods=["POST"])
+    def user_join():
+        user = UserController()
+        return user.join()
