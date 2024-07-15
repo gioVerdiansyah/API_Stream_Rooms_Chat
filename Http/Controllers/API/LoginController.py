@@ -12,7 +12,7 @@ def verify_login():
         password = json_data['password']
         if username and password:
             if username == os.getenv("APP_LOGIN_USER") and password == os.getenv("APP_LOGIN_PASSWORD"):
-                return response(message="Successfully login", data=uuid.uuid4())
+                return response(message="Successfully login", data=os.getenv("APP_LOGIN_TOKEN"))
             else:
                 return response(message="Incorrect Username or Password", isSuccess=False, statusCode=401)
         return response(message="Missing Credentials", statusCode=422, isSuccess=False)

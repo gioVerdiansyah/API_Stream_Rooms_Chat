@@ -20,6 +20,6 @@ class UserController:
             json_data = request.get_json()
             result = self.model.user_join(json_data)
 
-            return response(message=result['message'], isSuccess=result['success'], statusCode=result['code'])
+            return response(message=result['message'], isSuccess=result['success'], statusCode=result['code'], data=result['data'])
         except Exception as e:
             return response(message="There is a server error!", data=str(e), isSuccess=False, statusCode=500)

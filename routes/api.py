@@ -54,3 +54,9 @@ def __init_api__():
     def user_join():
         user = UserController()
         return user.join()
+
+
+    @app.route("/api/user/chat/get", methods=["GET"])
+    def get_news_chat():
+        room = RoomsController()
+        return room.get_news_chat()

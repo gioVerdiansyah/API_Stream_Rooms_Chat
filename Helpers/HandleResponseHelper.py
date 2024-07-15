@@ -18,6 +18,7 @@ def response(message="Successfully get", data=None, isSuccess=True, statusCode=2
 
     return responses
 
+
 def get_struc(message="Successfully get", data=None, isSuccess=True, statusCode=200):
     response_payload = {
         "meta": {
@@ -27,4 +28,4 @@ def get_struc(message="Successfully get", data=None, isSuccess=True, statusCode=
         },
         "data": data
     }
-    return  response_payload
+    return response_payload

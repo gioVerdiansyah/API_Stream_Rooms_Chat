@@ -1,8 +1,6 @@
-import json
 from datetime import datetime
 
 from Models.main import ModelMain
-from Core.Flask_Kernel import socketio
 from bson import ObjectId
 from pymongo import DESCENDING
 
@@ -29,9 +27,8 @@ class RoomsModel(ModelMain):
 
         data = collection.find_one({"_id": data["_id"]}, self.selected_column)
         data["_id"] = str(data["_id"])
-        socketio.emit("stream_rooms", {"status": "create", "data": data})
 
-        return {"success": True, "message": "Successfully add room", "code": 200}
+        return {"success": True, "message": "Successfully add room", "code": 200, "data": data}
 
     def edit_room(self, payload):
         collection = self.collection
@@ -49,10 +46,7 @@ class RoomsModel(ModelMain):
         updated_room = collection.find_one({"_id": room_id}, self.selected_column)
         updated_room['_id'] = str(updated_room['_id'])
 
-        print(updated_room)
-        socketio.emit("stream_rooms", {"status": "update", "data": updated_room})
-
-        return {"success": True, "message": "Successfully edit room", "code": 200}
+        return {"success": True, "message": "Successfully edit room", "code": 200, "data": updated_room}
 
     def delete_room(self, payload):
         collection = self.collection
@@ -65,6 +59,47 @@ class RoomsModel(ModelMain):
         collection.delete_one(isExist)
 
         isExist['_id'] = str(isExist['_id'])
-        socketio.emit("stream_rooms", {"status": "delete", "data": isExist})
 
-        return {"success": True, "message": "Successfully delete room", "code": 200}
+        return {"success": True, "message": "Successfully delete room", "code": 200, "data": isExist}
+
+    def find_room(self, room_id):
+        collection = self.collection
+
+        get_room = collection.find_one({"_id": ObjectId(room_id)}, {"_id", "name"})
+        if not get_room:
+            return {"success": False, "message": "Data is not found!", "code": 404, "data": None}
+
+        get_room['_id'] = str(get_room['_id'])
+
+        return {"success": True, "message": "Successfully get room", "code": 200, "data": get_room}
+
+    # Socket
+    # Chat
+
+    def get_news_chat(self, room_id):
+        collection = self.collection
+
+        talks = collection.find_one({"_id": ObjectId(room_id)}).get("talks")
+
+        if not talks:
+            return {"success": False, "message": "Data is not found!", "code": 404, "data": None}
+
+        return {"success": True, "message": "Successfully get room", "code": 200, "data": talks}
+
+    def send_chat(self, room_id, message, user_token, username):
+        collection = self.collection
+
+        payload = {
+            "user_id": user_token,
+            "name": username,
+            "message": message,
+            "chat_at": datetime.now()
+        }
+
+        collection.update_one(
+            {"_id": ObjectId(room_id)},
+            {"$push": {"talks": payload}}
+        )
+
+        payload['chat_at'] = str(payload['chat_at'])
+        return payload
