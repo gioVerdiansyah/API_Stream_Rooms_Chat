@@ -2,7 +2,7 @@ from Core.Flask_Kernel import socketio
 
 # Sockets
 from Http.Middleware.VerifyTokenKey import valid_token
-from Http.Controllers.Socket.ConnectedSocket import socket_connected
+from Http.Controllers.Socket.ConnectedSocket import socket_connected, socket_disconnected
 from Http.Controllers.Socket.UserSocketController import UserSocketController
 from Http.Controllers.Socket.RoomController import RoomController
 
@@ -13,6 +13,10 @@ def __init_socket__():
         if not valid_token():
             return False
         socket_connected()
+
+    @socketio.on("disconnect")
+    def run_disconnect():
+        socket_disconnected()
 
     @socketio.on("want_latest_joined_room")
     def run_want_latest_joined_room():
@@ -46,5 +50,7 @@ def __init_socket__():
         user = UserSocketController()
         user.get_new_username()
 
-    # Admin Streaming Data Event
-    # stream_rooms
+    @socketio.on("rename_username")
+    def run_rename_username(name):
+        user = UserSocketController()
+        user.rename_username(name)

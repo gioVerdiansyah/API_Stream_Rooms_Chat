@@ -79,10 +79,12 @@ class RoomsModel(ModelMain):
     def get_news_chat(self, room_id):
         collection = self.collection
 
-        talks = collection.find_one({"_id": ObjectId(room_id)}).get("talks")
+        talks = collection.find_one({"_id": ObjectId(room_id)})
 
         if not talks:
             return {"success": False, "message": "Data is not found!", "code": 404, "data": None}
+
+        talks = talks.get("talks")
 
         return {"success": True, "message": "Successfully get room", "code": 200, "data": talks}
 
