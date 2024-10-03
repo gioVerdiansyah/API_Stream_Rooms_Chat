@@ -1,6 +1,6 @@
 import os
 from functools import wraps
-from flask import request
+from flask import request, make_response
 from Helpers.HandleResponseHelper import response
 
 
@@ -9,6 +9,11 @@ def require_api_key(func):
     def wrapper(*args, **kwargs):
         if request.method == 'OPTIONS':
             return
+            # response_h = make_response('', 204)
+            # response_h.headers['Access-Control-Allow-Origin'] = '*'
+            # response_h.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, PUT, DELETE'
+            # response_h.headers['Access-Control-Allow-Headers'] = 'Content-Type, x-api-key, Authorization'
+            # return response_h
         try:
             api_key = request.headers.get('x-api-key')
             if not api_key:

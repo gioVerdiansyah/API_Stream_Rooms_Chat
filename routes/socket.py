@@ -10,6 +10,7 @@ from Http.Controllers.Socket.RoomController import RoomController
 def __init_socket__():
     @socketio.on("connect")
     def run_connect():
+        print("connected")
         if not valid_token():
             return False
         socket_connected()

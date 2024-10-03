@@ -24,7 +24,6 @@ class UserModel(ModelMain):
 
     def user_join(self, data):
         collection = self.collection
-        print(data)
 
         hasExist = collection.find_one({"username": data['username']})
 
@@ -72,6 +71,7 @@ class UserModel(ModelMain):
         room['_id'] = str(room['_id'])
         collection = self.collection
 
+        print(user_id)
         get_id = collection.find_one({"_id": ObjectId(user_id)}, {"username"})
         if not get_id:
             return get_struc(message="User ID is not found!", isSuccess=False, statusCode=401)
